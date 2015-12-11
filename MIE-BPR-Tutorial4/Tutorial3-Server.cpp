@@ -13,10 +13,36 @@ int showTime() {
 	return 0;
 }
 
+string readConfigurationFile() {
+	wchar_t* localAppData = 0;
+	SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, NULL, &localAppData);
+	wstringstream ss;
+	ss << localAppData << L"\\Clock\\conf.txt";
+
+	ifstream file;
+	file.open(ss.str().c_str());
+	if (file) {
+		char output[100];
+		if (file.is_open()) {
+			while (!file.eof()) {
+				file >> output;
+			}
+		}
+		file.close();
+		CoTaskMemFree(static_cast<void*>(localAppData));
+		return string(output);
+	}
+	printf("el archivo no existe");
+	return string("80");
+	
+}
+
 int main(){
 	showTime();
-
-	Server s = Server(80);
+	
+	string portString = readConfigurationFile();
+	int port = atoi(portString.c_str());
+	Server s = Server(port);
 	int res = s.create();
 	
 	s.listenConnections();

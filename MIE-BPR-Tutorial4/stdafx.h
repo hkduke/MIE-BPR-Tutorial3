@@ -10,6 +10,10 @@
 #include <stdio.h>
 #include <tchar.h>
 #include <iostream>
+#include <fstream>
+#include <shlobj.h>
+#include <winerror.h>
+#include <sstream>
 
 #include <windows.h>
 #include <string>
