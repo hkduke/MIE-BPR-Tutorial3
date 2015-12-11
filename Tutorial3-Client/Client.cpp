@@ -2,10 +2,9 @@
 #include "Client.h"
 
 #define DEFAULT_BUFLEN 512
-#define DEFAULT_PORT "80"
 
 
-Client::Client(int port) {
+Client::Client(char* port) {
 	this->port = port;
 	this->theSocket = INVALID_SOCKET;
 }
@@ -32,8 +31,7 @@ int Client::create() {
 	hints.ai_socktype = SOCK_STREAM;
 	hints.ai_protocol = IPPROTO_TCP;
 
-	// Resolve the server address and port
-	iResult = getaddrinfo("127.0.0.1", DEFAULT_PORT, &hints, &result);
+	iResult = getaddrinfo("127.0.0.1", this->port, &hints, &result);
 	if (iResult != 0) {
 		printf("getaddrinfo failed with error: %d\n", iResult);
 		WSACleanup();
@@ -41,7 +39,6 @@ int Client::create() {
 	}
 
 	for (ptr = result; ptr != NULL; ptr = ptr->ai_next) {
-		// Create a SOCKET for connecting to server
 		this->theSocket = socket(ptr->ai_family, ptr->ai_socktype,
 			ptr->ai_protocol);
 		if (this->theSocket == INVALID_SOCKET) {
@@ -50,7 +47,6 @@ int Client::create() {
 			return -1;
 		}
 
-		// Connect to server.
 		iResult = connect(this->theSocket, ptr->ai_addr, (int)ptr->ai_addrlen);
 		if (iResult == SOCKET_ERROR) {
 			closesocket(this->theSocket);

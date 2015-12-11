@@ -10,6 +10,7 @@ class Server{
 	public:
 		Server(int port);
 		~Server();
+
 		int create();
 		int listenConnections();
 		int sendData(string data);

@@ -25,17 +25,14 @@ int Server::create() {
 		wprintf(L"WSAStartup() failed with error: %d\n", iResult);
 		return -1;
 	}
-	//----------------------
-	// Create a SOCKET for listening for incoming connection requests.
+	
 	this->theSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (this->theSocket == INVALID_SOCKET) {
 		wprintf(L"socket function failed with error: %ld\n", WSAGetLastError());
 		WSACleanup();
 		return -1;
 	}
-	//----------------------
-	// The sockaddr_in structure specifies the address family,
-	// IP address, and port for the socket that is being bound.
+
 	service.sin_family = AF_INET;
 	service.sin_addr.s_addr = inet_addr("127.0.0.1");
 	service.sin_port = htons(this->port);
@@ -49,26 +46,15 @@ int Server::create() {
 		WSACleanup();
 		return -1;
 	}
-	//----------------------
-	// Listen for incoming connection requests 
-	// on the created socket
 	if (listen(this->theSocket, SOMAXCONN) == SOCKET_ERROR) {
 		wprintf(L"listen function failed with error: %d\n", WSAGetLastError());
 		return -1;
 	}
-	wprintf(L"Listening on socket...\n");
 
-	//WSACleanup();
 	return 0;
 }
 
 int Server::listenConnections() {
-	
-	//SOCKET AcceptSocket;
-	wprintf(L"Waiting for client to connect...\n");
-
-	//----------------------
-	// Accept the connection.
 	this->clientSocket = accept(this->theSocket, NULL, NULL);
 	if (this->clientSocket == INVALID_SOCKET) {
 		wprintf(L"accept failed with error: %ld\n", WSAGetLastError());
@@ -86,12 +72,11 @@ int Server::sendData(string data) {
 	int iSendResult = 0;
 	iSendResult = send(this->clientSocket, data.c_str(), data.length(), 0);
 	if (iSendResult == SOCKET_ERROR) {
-		printf("send failed with error: %d\n", WSAGetLastError());
+		wprintf(L"send failed with error: %ld\n", WSAGetLastError());
 		closesocket(clientSocket);
 		WSACleanup();
 		return -1;
 	}
-	printf("Bytes sent: %d\n", iSendResult);
 	return iSendResult;
 }
 
@@ -100,8 +85,8 @@ string Server::receiveData() {
 	char recvbuf[DEFAULT_BUFLEN];
 	int recvbuflen = DEFAULT_BUFLEN;
 	iResult = recv(this->clientSocket, recvbuf, recvbuflen, 0);
-	if (iResult > 0) {
-		printf("Bytes received: %d\n", iResult);
+	if (iResult <= 0) {
+		printf("Error in recv: %d\n", iResult);
 	}
 	string res = (string(recvbuf));
 	res.resize(iResult);

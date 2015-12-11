@@ -10,7 +10,7 @@
 int main() {
 	printf("soy el clientillo \n");
 
-	Client c = Client(80);
+	Client c = Client("80");
 	int res = c.create();
 	int res2 = c.sendData("hola");
 	string s = c.receiveData();

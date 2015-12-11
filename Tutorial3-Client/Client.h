@@ -4,15 +4,16 @@ using namespace std;
 class Client
 {
 	public:
-		Client(int port);
+		Client(char* port);
 		~Client();
+
 		int create();
 		int sendData(string buffer);
 		string receiveData();
 		int close();
 
 	private:
-		int port;
+		char* port;
 		SOCKET theSocket;
 };
 

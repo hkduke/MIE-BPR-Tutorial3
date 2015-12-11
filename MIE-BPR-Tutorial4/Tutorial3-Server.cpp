@@ -18,9 +18,7 @@ int main(){
 
 	Server s = Server(80);
 	int res = s.create();
-		
-	printf("%d", res);
-
+	
 	s.listenConnections();
 
 	string receivedata = s.receiveData();
