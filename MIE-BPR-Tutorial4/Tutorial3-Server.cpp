@@ -66,6 +66,13 @@ int callProcessToChangeTime() {
 	return 0;
 }
 
+int showTime() {
+	SYSTEMTIME st;
+
+	GetSystemTime(&st);
+	printf("The system time is: %02d:%02d\n", st.wHour, st.wMinute);
+	return 0;
+}
 
 int main(){
 	callProcessToChangeTime();

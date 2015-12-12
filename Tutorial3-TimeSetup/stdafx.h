@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <tchar.h>
 #include <iostream>
+#include <vector>
 
 #include <shlobj.h>
 #include <winerror.h>

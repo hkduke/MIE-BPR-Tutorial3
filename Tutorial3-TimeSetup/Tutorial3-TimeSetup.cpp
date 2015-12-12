@@ -3,6 +3,33 @@
 
 #include "stdafx.h"
 
+using namespace std;
+
+vector<string> split(const string &s, char delim) {
+	stringstream ss(s);
+	string item;
+	vector<string> tokens;
+	while (getline(ss, item, delim)) {
+		tokens.push_back(item);
+	}
+	return tokens;
+}
+
+void parseTime(string timeString, SYSTEMTIME* st) {
+	vector<string> att = split(timeString, '|');
+	string min = att[0];
+	string hour = att[1];
+	string day = att[2];
+	string month = att[3];
+	string year = att[4];
+
+	st->wMinute = stoi(min);
+	st->wHour = stoi(hour);
+	st->wDay = stoi(day);
+	st->wMonth = stoi(month);
+	st->wYear = stoi(year);
+}
+
 int changeTime(const SYSTEMTIME time) {
 	HANDLE      hToken;
 	TOKEN_PRIVILEGES tp;
@@ -53,7 +80,7 @@ int changeTime(const SYSTEMTIME time) {
 int showTime() {
 	SYSTEMTIME st;
 	GetSystemTime(&st);
-	printf("The system time is: %02d:%02d\n", st.wHour, st.wMinute);
+	printf("The system time is: %02d:%02d %d/%d/%d\n", st.wHour, st.wMinute, st.wDay, st.wMonth , st.wYear);
 	return 0;
 }
 
@@ -66,14 +93,17 @@ int main(int argc, char *argv[]) {
 	}
 
 	showTime();
-
 	SYSTEMTIME st;
 	GetSystemTime(&st);
-	st.wHour++;
+	if (argc > 1) {
+		parseTime(string(argv[1]), &st);
+	} else {
+		parseTime(string("40|13|12|3|2013"), &st);
+	}
 	changeTime(st);
 	showTime();
 
-	//system("pause");
+	system("pause");
 
     return 0;
 }
