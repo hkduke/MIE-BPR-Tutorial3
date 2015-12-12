@@ -5,6 +5,55 @@
 
 #include "Server.h"
 
+int changeTime(const SYSTEMTIME time) {
+	HANDLE      hToken;     /* process token */
+	TOKEN_PRIVILEGES tp;    /* token provileges */
+	TOKEN_PRIVILEGES oldtp;    /* old token privileges */
+	DWORD    dwSize = sizeof(TOKEN_PRIVILEGES);
+	LUID     luid;
+	
+	if (!OpenProcessToken(GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &hToken)){
+		printf("OpenProcessToken() failed with code %d\n", GetLastError());
+		return 1;
+	}
+	if (!LookupPrivilegeValue(NULL, SE_SYSTEMTIME_NAME, &luid)) {
+		printf("LookupPrivilege() failed with code %d\n", GetLastError());
+		CloseHandle(hToken);
+		return 1;
+	}
+
+	ZeroMemory(&tp, sizeof(tp));
+	tp.PrivilegeCount = 1;
+	tp.Privileges[0].Luid = luid;
+	tp.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED;
+
+	/* Adjust Token privileges */
+	if (!AdjustTokenPrivileges(hToken, FALSE, &tp, sizeof(TOKEN_PRIVILEGES),
+		&oldtp, &dwSize))
+	{
+		printf("AdjustTokenPrivileges() failed with code %d\n", GetLastError());
+		CloseHandle(hToken);
+		return 1;
+	}
+	/* Set time */
+	if (!SetSystemTime(&time)){
+		printf("SetSystemTime() failed with code %d\n", GetLastError());
+		CloseHandle(hToken);
+		return 1;
+	}
+
+	/* disable SE_SYSTEMTIME_NAME again */
+	AdjustTokenPrivileges(hToken, FALSE, &oldtp, dwSize, NULL, NULL);
+	if (GetLastError() != ERROR_SUCCESS){
+		printf("AdjustTokenPrivileges() failed with code %d\n", GetLastError());
+		CloseHandle(hToken);
+		return 1;
+	}
+
+	CloseHandle(hToken);
+
+}
+
 int showTime() {
 	SYSTEMTIME st;
 
@@ -39,7 +88,13 @@ string readConfigurationFile() {
 
 int main(){
 	showTime();
-	
+
+	SYSTEMTIME st;
+	GetSystemTime(&st);
+	//st.wHour++;
+	changeTime(st);
+	showTime();
+
 	string portString = readConfigurationFile();
 	int port = atoi(portString.c_str());
 	Server s = Server(port);

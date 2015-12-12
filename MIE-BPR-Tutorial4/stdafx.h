@@ -14,6 +14,7 @@
 #include <shlobj.h>
 #include <winerror.h>
 #include <sstream>
+#include <Shlwapi.h>
 
 #include <windows.h>
 #include <string>
