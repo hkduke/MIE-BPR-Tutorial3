@@ -17,6 +17,9 @@
 #include <sstream>
 #include <Shlwapi.h>
 
+#include "Parser.h"
+#include "PrivilegeManager.h"
+#include "Clock.h"
 
 
 // TODO: reference additional headers your program requires here
