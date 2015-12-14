@@ -17,6 +17,17 @@
 #include <iostream>
 #include <string>
 
+#include "boost/date_time/gregorian/gregorian.hpp"
+#include "boost/date_time/posix_time/posix_time.hpp"
+
+#include "../Tutorial3-Shared/Message.h"
+#include "../Tutorial3-Shared/Operations.h"
+
+#include "InputOutput.h"
+#include "Client.h"
+
+
+
 
 
 // TODO: reference additional headers your program requires here

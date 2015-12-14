@@ -66,13 +66,6 @@ int callProcessToChangeTime() {
 	return 0;
 }
 
-int showTime() {
-	SYSTEMTIME st;
-
-	GetSystemTime(&st);
-	printf("The system time is: %02d:%02d\n", st.wHour, st.wMinute);
-	return 0;
-}
 
 int main(){
 	callProcessToChangeTime();
@@ -87,7 +80,6 @@ int main(){
 	std::cout << "El server recibe esto " << receivedata << std::endl;
 
 	s.sendData("puto");
-
 
 	system("pause");
     return 0;
