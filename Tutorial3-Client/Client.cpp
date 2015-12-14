@@ -66,38 +66,26 @@ int Client::create() {
 	return 0;
 }
 
-int Client::sendData(string buffer) {
-	char *sendbuf = "this is a test";
+int Client::sendData(char* data, int size) {
 	int iResult;
 	int recvbuflen = DEFAULT_BUFLEN;
-	// Send an initial buffer
-	iResult = send(this->theSocket, buffer.c_str(), (int)buffer.length(), 0);
+	iResult = send(this->theSocket, data, size, 0);
 	if (iResult == SOCKET_ERROR) {
 		printf("send failed with error: %d\n", WSAGetLastError());
 		closesocket(this->theSocket);
 		WSACleanup();
 		return -1;
 	}
-	printf("Bytes Sent: %ld\n", iResult);
 	return iResult;
 }
 
-string Client::receiveData() {
-	char recvbuf[DEFAULT_BUFLEN];
-	int iResult;
-	int recvbuflen = DEFAULT_BUFLEN;
+int Client::receiveData(char* buffer, int size) {
+	int iResult = recv(this->theSocket, buffer, size, 0);
+	
+	if (iResult == 0) printf("Connection closed\n");
+	else printf("recv failed with error: %d\n", WSAGetLastError());
 
-	iResult = recv(this->theSocket, recvbuf, recvbuflen, 0);
-	if (iResult > 0)
-		printf("Bytes received: %d\n", iResult);
-	else if (iResult == 0)
-		printf("Connection closed\n");
-	else
-		printf("recv failed with error: %d\n", WSAGetLastError());
-
-	string res = (string(recvbuf));
-	res.resize(iResult);
-	return res;
+	return iResult;
 }
 
 

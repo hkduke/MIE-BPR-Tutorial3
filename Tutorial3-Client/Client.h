@@ -1,5 +1,4 @@
 #pragma once
-using namespace std;
 
 class Client
 {
@@ -8,8 +7,8 @@ class Client
 		~Client();
 
 		int create();
-		int sendData(string buffer);
-		string receiveData();
+		int sendData(char* data, int size);
+		int receiveData(char* buffer, int size);
 		int close();
 
 	private:

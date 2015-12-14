@@ -9,14 +9,19 @@
 int main() {
 	printf("soy el clientillo \n");
 
-	Message m;
-	InputOutput::getMessage(&m);
+	Message mSent;
+	//InputOutput::getMessage(&mSent);
+	mSent.op = 12;
 
-	//Client c = Client("80");
-	//int res = c.create();
-	//int res2 = c.sendData("hola");
-	//string s = c.receiveData();
-	//std::cout << "recibi esto wacho " << s << std::endl;
+	Client c = Client("80");
+	int res = c.create();
+	
+	std::cout << "El cliente manda esta operacion" << mSent.op << std::endl;
+	int resSend = c.sendData((char*) &mSent, sizeof(mSent));
+
+	Message mRec;
+	int resRec = c.receiveData((char *) &mRec, sizeof(mRec));
+	std::cout << "El cliente recibe esta operacion" << mRec.op << std::endl;
 
 	system("pause");
 

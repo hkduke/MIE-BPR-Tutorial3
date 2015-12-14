@@ -1,7 +1,6 @@
 #pragma once
 
 #include "stdafx.h"
-using namespace std;
 
 #pragma comment(lib, "ws2_32.lib")
 
@@ -13,8 +12,8 @@ class Server{
 
 		int create();
 		int listenConnections();
-		int sendData(string data);
-		string receiveData();
+		int sendData(char* data, int size);
+		int receiveData(char* buffer, int size);
 		int close();
 
 	private:

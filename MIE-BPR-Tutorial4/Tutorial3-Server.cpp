@@ -5,6 +5,8 @@
 
 #include "Server.h"
 
+using namespace std;
+
 string readConfigurationFile() {
 	wchar_t* localAppData = 0;
 	SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, NULL, &localAppData);
@@ -68,7 +70,7 @@ int callProcessToChangeTime() {
 
 
 int main(){
-	callProcessToChangeTime();
+	//callProcessToChangeTime();
 	string portString = readConfigurationFile();
 	int port = atoi(portString.c_str());
 	Server s = Server(port);
@@ -76,10 +78,14 @@ int main(){
 	
 	s.listenConnections();
 
-	string receivedata = s.receiveData();
-	std::cout << "El server recibe esto " << receivedata << std::endl;
+	Message mRec;
+	s.receiveData((char*) &mRec, sizeof(mRec));
+	std::cout << "El server recibe esta operacion " << mRec.op << std::endl;
 
-	s.sendData("puto");
+	Message mSent;
+	mSent.op = 13;
+	std::cout << "El server manda esta operacion " << mSent.op << std::endl;
+	s.sendData((char*) &mSent, sizeof(mSent));
 
 	system("pause");
     return 0;

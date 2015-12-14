@@ -68,9 +68,9 @@ int Server::listenConnections() {
 	return 0;
 }
 
-int Server::sendData(string data) {
+int Server::sendData(char* data, int size) {
 	int iSendResult = 0;
-	iSendResult = send(this->clientSocket, data.c_str(), data.length(), 0);
+	iSendResult = send(this->clientSocket, data, size, 0);
 	if (iSendResult == SOCKET_ERROR) {
 		wprintf(L"send failed with error: %ld\n", WSAGetLastError());
 		closesocket(clientSocket);
@@ -80,17 +80,13 @@ int Server::sendData(string data) {
 	return iSendResult;
 }
 
-string Server::receiveData() {
+int Server::receiveData(char* buffer, int size) {
 	int iResult = 0;
-	char recvbuf[DEFAULT_BUFLEN];
-	int recvbuflen = DEFAULT_BUFLEN;
-	iResult = recv(this->clientSocket, recvbuf, recvbuflen, 0);
+	iResult = recv(this->clientSocket, buffer, size, 0);
 	if (iResult <= 0) {
 		printf("Error in recv: %d\n", iResult);
 	}
-	string res = (string(recvbuf));
-	res.resize(iResult);
-	return res;
+	return iResult;
 }
 
 

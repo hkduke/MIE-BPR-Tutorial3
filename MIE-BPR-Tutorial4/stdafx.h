@@ -19,6 +19,9 @@
 #include <windows.h>
 #include <string>
 
+#include "../Tutorial3-Shared/Message.h"
+#include "../Tutorial3-Shared/Operations.h"
+
 
 
 
