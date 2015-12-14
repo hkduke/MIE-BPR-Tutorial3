@@ -22,6 +22,9 @@
 #include "../Tutorial3-Shared/Message.h"
 #include "../Tutorial3-Shared/Operations.h"
 
+#include "Server.h"
+#include "Worker.h"
+
 
 
 

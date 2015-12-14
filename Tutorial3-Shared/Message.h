@@ -9,4 +9,6 @@ typedef struct message {
 	int day;
 	int month;
 	int year;
+
+	int result = -1;
 }Message;

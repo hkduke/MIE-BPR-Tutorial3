@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #include "Client.h"
 
-#define DEFAULT_BUFLEN 512
-
 
 Client::Client(char* port) {
 	this->port = port;
@@ -18,7 +16,6 @@ int Client::create() {
 	struct addrinfo *result = NULL, *ptr = NULL;
 	struct addrinfo hints;
 	int iResult;
-	int recvbuflen = DEFAULT_BUFLEN;
 
 	iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
 	if (iResult != 0) {
@@ -68,7 +65,6 @@ int Client::create() {
 
 int Client::sendData(char* data, int size) {
 	int iResult;
-	int recvbuflen = DEFAULT_BUFLEN;
 	iResult = send(this->theSocket, data, size, 0);
 	if (iResult == SOCKET_ERROR) {
 		printf("send failed with error: %d\n", WSAGetLastError());
@@ -83,7 +79,7 @@ int Client::receiveData(char* buffer, int size) {
 	int iResult = recv(this->theSocket, buffer, size, 0);
 	
 	if (iResult == 0) printf("Connection closed\n");
-	else printf("recv failed with error: %d\n", WSAGetLastError());
+	else if (iResult < 0) printf("recv failed with error: %d\n", WSAGetLastError());
 
 	return iResult;
 }

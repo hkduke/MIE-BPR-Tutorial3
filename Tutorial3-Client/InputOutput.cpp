@@ -106,3 +106,17 @@ int InputOutput::getNumber(string input) {
 	return -1;
 }
 
+void InputOutput::showMessage(Message* m) {
+	if (m->op == Operations::GET_SYSTEM_TIME) {
+		cout << "aca hay que mostrar la hora" << endl;
+	}
+	else if (m->op == Operations::SET_SYSTEM_TIME) {
+		cout << "aca hay que decir si salio todo bien" << endl;
+		if (m->result == 1) {
+			cout << "salio re piola" << endl;
+		}
+	}
+	else if (m->op == Operations::EXIT) {
+		cout << "chau" << endl;
+	}
+}

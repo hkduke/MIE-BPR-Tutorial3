@@ -14,12 +14,6 @@ int showTime() {
 }
 
 int main(int argc, char *argv[]) {
-
-	printf("argc = %d \n", argc);
-	for (int i = 0; i < argc; i++) {
-		std::cout << "argv["<<i<<"] = " << std::string(argv[i]) << std::endl;
-	}
-
 	showTime();
 	SYSTEMTIME st;
 	if (argc > 1) {
@@ -28,10 +22,7 @@ int main(int argc, char *argv[]) {
 		Parser::parseTime(string("40|13|12|3|2013"), &st);
 	}
 	Clock::setTime(st);
-
 	showTime();
-
-	system("pause");
 
     return 0;
 }

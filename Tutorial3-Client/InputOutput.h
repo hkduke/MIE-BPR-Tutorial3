@@ -8,6 +8,7 @@ class InputOutput{
 		~InputOutput();
 
 		static void getMessage(Message* m);
+		static void showMessage(Message* m);
 		
 	private:
 		static void getTime(Message* m);

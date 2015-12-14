@@ -25,6 +25,7 @@
 
 #include "InputOutput.h"
 #include "Client.h"
+#include "ClientProgram.h"
 
 
 
