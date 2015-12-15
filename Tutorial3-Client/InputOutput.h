@@ -16,5 +16,6 @@ class InputOutput{
 		static void getDatetime(Message* m);
 		static int getNumber(string input);
 		static bool isInteger(const string & s);
+		static void showDatetime(Message* m);
 };
 
