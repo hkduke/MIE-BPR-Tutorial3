@@ -11,6 +11,7 @@ Worker::Worker(){
 	if (this->server->create() == -1) {
 		cout << "Error creating the server" << endl;
 	}
+	cout << "Server running" << endl;
 }
 
 
@@ -41,7 +42,7 @@ string Worker::readConfigurationFile() {
 		CoTaskMemFree(static_cast<void*>(localAppData));
 		return string(output);
 	}
-	printf("el archivo no existe");
+	printf("The file conf.txt in the folder AppData/Clock does not exists");
 	return string("80");
 
 }
@@ -50,11 +51,11 @@ void Worker::run() {
 	while (true) {
 		this->server->listenConnections();
 		int resRec = 1;
-		std::cout << "Se conecto un cliente"<< std::endl;
 		while (resRec > 0) {
 
 			Message m;
 			resRec = this->server->receiveData((char*)&m, sizeof(m));
+			if (resRec == 0) break;
 			std::cout << "El server recibe esta operacion " << m.op << std::endl;
 
 			reply(&m);

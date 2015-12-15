@@ -7,13 +7,10 @@
 
 
 int main() {
-	printf("soy el clientillo \n");
-
 	ClientProgram cp = ClientProgram();
 	cp.run();
 
 	system("pause");
-
     return 0;
 }
 

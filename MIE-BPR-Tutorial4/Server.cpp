@@ -83,7 +83,7 @@ int Server::sendData(char* data, int size) {
 int Server::receiveData(char* buffer, int size) {
 	int iResult = 0;
 	iResult = recv(this->clientSocket, buffer, size, 0);
-	if (iResult <= 0) {
+	if (iResult < 0) {
 		printf("Error in recv: %d\n", iResult);
 	}
 	return iResult;
