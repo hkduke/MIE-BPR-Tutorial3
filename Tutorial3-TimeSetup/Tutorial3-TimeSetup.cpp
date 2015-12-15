@@ -25,7 +25,7 @@ int main(int argc, char *argv[]) {
 	if (argc > 1) {
 		Parser::parseTime(string(argv[1]), &st);
 	} else {
-		Parser::parseTime(string("40|13|12|3|2013"), &st);
+		Parser::parseTime(string("59|23|23|12|1864"), &st);
 	}
 	Clock::setTime(st);
 	showTime();

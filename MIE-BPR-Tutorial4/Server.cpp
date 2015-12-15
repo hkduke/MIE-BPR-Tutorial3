@@ -25,7 +25,7 @@ int Server::create() {
 		wprintf(L"WSAStartup() failed with error: %d\n", iResult);
 		return -1;
 	}
-	
+
 	this->theSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (this->theSocket == INVALID_SOCKET) {
 		wprintf(L"socket function failed with error: %ld\n", WSAGetLastError());

@@ -28,6 +28,7 @@ string Worker::readConfigurationFile() {
 	ss << localAppData << L"\\Clock\\conf.txt";
 
 	ifstream file;
+
 	file.open(ss.str().c_str());
 	if (file) {
 		char output[100];
@@ -138,13 +139,14 @@ void Worker::setSystemTime(Message* m) {
 	sinfo.hwnd = NULL;
 	sinfo.lpFile = (LPCWSTR) wline.c_str();
 	sinfo.lpParameters = (LPCWSTR) wtime.c_str();
-	sinfo.lpVerb = L"runas"; // <<-- this is what makes a UAC prompt show up
+	sinfo.lpVerb = _TEXT("runas"); // <<-- this is what makes a UAC prompt show up
 	sinfo.nShow = SW_SHOW;
 	int res = ShellExecuteEx(&sinfo);
 	if (res != 0) {
 		WaitForSingleObject(sinfo.hProcess, INFINITE);
 		CloseHandle(sinfo.hProcess);
 	}
+	wprintf(L"shellexecuteex with error: %ld\n", WSAGetLastError());
 
 	showTime();
 
