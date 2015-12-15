@@ -24,6 +24,8 @@ int main(int argc, char *argv[]) {
 	Clock::setTime(st);
 	showTime();
 
+	system("pause");
+
     return 0;
 }
 
