@@ -101,14 +101,14 @@ string Worker::serializeTime(Message* m) {
 }
 
 void Worker::setSystemTime(Message* m) {
-	string program = "Tutorial3-TimeSetup.exe";
+	string program = "..\\Debug\\Tutorial3-TimeSetup.exe";
 	string newTime = serializeTime(m);
 	
 	stringstream ss;
-	ss << program << ' ' << newTime;
+	ss << program /*<< ' ' << newTime*/;
 	wstring wline = s2ws(ss.str());
 
-	STARTUPINFO si;
+	/*STARTUPINFO si;
 	PROCESS_INFORMATION pi;
 	memset(&si, 0, sizeof(si));
 	memset(&pi, 0, sizeof(pi));
@@ -122,6 +122,22 @@ void Worker::setSystemTime(Message* m) {
 	}
 	else {
 		wprintf(L"socket function failed with error: %ld\n", WSAGetLastError());
+	}*/
+
+	SHELLEXECUTEINFO sinfo;
+	memset(&sinfo, 0, sizeof(SHELLEXECUTEINFO));
+	sinfo.cbSize = sizeof(SHELLEXECUTEINFO);
+	sinfo.fMask = SEE_MASK_FLAG_DDEWAIT |
+		SEE_MASK_NOCLOSEPROCESS;
+	sinfo.hwnd = NULL;
+	sinfo.lpFile = (LPCWSTR) wline.c_str();
+	sinfo.lpParameters = NULL;
+	sinfo.lpVerb = L"runas"; // <<-- this is what makes a UAC prompt show up
+	sinfo.nShow = SW_SHOW;
+	int res = ShellExecuteEx(&sinfo);
+	if (res != 0) {
+		WaitForSingleObject(sinfo.hProcess, INFINITE);
+		CloseHandle(sinfo.hProcess);
 	}
 
 	m->result = 1;
