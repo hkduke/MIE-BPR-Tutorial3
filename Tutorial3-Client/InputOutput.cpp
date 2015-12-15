@@ -73,7 +73,7 @@ void InputOutput::getTime(Message* m) {
 		if (splitedString.size() == 2 && isInteger(splitedString[0]) && isInteger(splitedString[1])) {
 			hour = InputOutput::getNumber(splitedString[0]);
 			min = InputOutput::getNumber(splitedString[1]);
-			if (hour > 0 && hour < 23 && min > 0 && min < 59) {
+			if (hour > 0 && hour < 24 && min > 0 && min < 60) {
 				m->min = min;
 				m->hour = hour;
 				return;
