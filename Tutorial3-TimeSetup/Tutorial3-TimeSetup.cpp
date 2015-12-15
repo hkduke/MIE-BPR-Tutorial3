@@ -14,6 +14,12 @@ int showTime() {
 }
 
 int main(int argc, char *argv[]) {
+
+	printf("argc = %d \n", argc);
+	for (int i = 0; i < argc; i++) {
+		std::cout << "argv[" << i << "] = " << std::string(argv[i]) << std::endl;
+	}
+
 	showTime();
 	SYSTEMTIME st;
 	if (argc > 1) {

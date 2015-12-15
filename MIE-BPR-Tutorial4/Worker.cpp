@@ -100,13 +100,19 @@ string Worker::serializeTime(Message* m) {
 	return ss.str();
 }
 
+int showTime() {
+	SYSTEMTIME st;
+	GetSystemTime(&st);
+	printf("The system time is: %02d:%02d %d/%d/%d\n", st.wHour, st.wMinute, st.wDay, st.wMonth, st.wYear);
+	return 0;
+}
+
 void Worker::setSystemTime(Message* m) {
 	string program = "..\\Debug\\Tutorial3-TimeSetup.exe";
 	string newTime = serializeTime(m);
 	
-	stringstream ss;
-	ss << program /*<< ' ' << newTime*/;
-	wstring wline = s2ws(ss.str());
+	wstring wline = s2ws(program);
+	wstring wtime = s2ws(newTime);
 
 	/*STARTUPINFO si;
 	PROCESS_INFORMATION pi;
@@ -131,7 +137,7 @@ void Worker::setSystemTime(Message* m) {
 		SEE_MASK_NOCLOSEPROCESS;
 	sinfo.hwnd = NULL;
 	sinfo.lpFile = (LPCWSTR) wline.c_str();
-	sinfo.lpParameters = NULL;
+	sinfo.lpParameters = (LPCWSTR) wtime.c_str();
 	sinfo.lpVerb = L"runas"; // <<-- this is what makes a UAC prompt show up
 	sinfo.nShow = SW_SHOW;
 	int res = ShellExecuteEx(&sinfo);
@@ -139,6 +145,8 @@ void Worker::setSystemTime(Message* m) {
 		WaitForSingleObject(sinfo.hProcess, INFINITE);
 		CloseHandle(sinfo.hProcess);
 	}
+
+	showTime();
 
 	m->result = 1;
 }
