@@ -4,9 +4,6 @@
 
 ClientProgram::ClientProgram(){
 	this->client = new Client("80");
-	if (this->client->create() == -1) {
-		std::cout << "Error creating the client." << std::endl;
-	}
 }
 
 
@@ -18,6 +15,9 @@ ClientProgram::~ClientProgram(){
 }
 
 void ClientProgram::run() {
+	if (this->client->create() == -1) {
+		return;
+	}
 	while (true) {
 		Message m;
 		InputOutput::getMessage(&m);
