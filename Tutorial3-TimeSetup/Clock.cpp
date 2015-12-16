@@ -20,24 +20,22 @@ int Clock::setTime(SYSTEMTIME st) {
 
 	PrivilegeManager manager = PrivilegeManager();
 
-	//if (manager.removePrivileges() == -1) {
-	//	return -1;
-	//}
+	if (manager.removePrivileges() == -1) {
+		return -1;
+	}
 
-	//if (manager.addPrivilege(SE_SYSTEMTIME_NAME) == -1) {
-	//	return -1;
-	//}
-
-	//if (manager.removePrivilege(SE_SYSTEMTIME_NAME) == -1) {
-	//	return -1;
-	//}
+	if (manager.addPrivilege(SE_SYSTEMTIME_NAME) == -1) {
+		return -1;
+	}
 
 	if (!SetSystemTime(&time)) {
 		printf("SetSystemTime() failed with code %d\n", GetLastError());
 		return -1;
 	}
 
-	
+	if (manager.removePrivilege(SE_SYSTEMTIME_NAME) == -1) {
+		return -1;
+	}	
 	return 0;
 
 }
