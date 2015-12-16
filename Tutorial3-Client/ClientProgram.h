@@ -7,5 +7,6 @@ class ClientProgram{
 	
 	private:
 		Client* client;
+		InputOutput* io;
 };
 

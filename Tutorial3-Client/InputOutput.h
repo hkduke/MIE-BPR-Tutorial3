@@ -7,15 +7,18 @@ class InputOutput{
 		InputOutput();
 		~InputOutput();
 
-		static void getMessage(Message* m);
-		static void showMessage(Message* m);
+		void getMessage(Message* m);
+		void showMessage(Message* m);
 		
 	private:
-		static void getTime(Message* m);
-		static void getDate(Message* m);
-		static void getDatetime(Message* m);
-		static int getNumber(string input);
-		static bool isInteger(const string & s);
-		static void showDatetime(Message* m);
+		void getTime(Message* m);
+		void getDate(Message* m);
+		void getDatetime(Message* m);
+		int getNumber(string input);
+		bool isInteger(const string & s);
+		void showDatetime(Message* m);
+		void selectFormat();
+
+		int selectedFormat;
 };
 

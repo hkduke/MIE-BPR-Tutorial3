@@ -4,6 +4,7 @@
 
 ClientProgram::ClientProgram(){
 	this->client = new Client("80");
+	this->io = new InputOutput();
 }
 
 
@@ -12,6 +13,7 @@ ClientProgram::~ClientProgram(){
 		std::cout << "Error closing the client" << std::endl;
 	}
 	delete this->client;
+	delete this->io;
 }
 
 void ClientProgram::run() {
@@ -20,15 +22,14 @@ void ClientProgram::run() {
 	}
 	while (true) {
 		Message m;
-		InputOutput::getMessage(&m);
+		io->getMessage(&m);
 		if (m.op == Operations::EXIT) {
-			std::cout << "chau gracias por usar este gran programa" << std::endl;
 			return;
 		}
 		this->client->sendData((char*)&m, sizeof(m));
 
 		this->client->receiveData((char *)&m, sizeof(m));
 
-		InputOutput::showMessage(&m);
+		io->showMessage(&m);
 	}
 }

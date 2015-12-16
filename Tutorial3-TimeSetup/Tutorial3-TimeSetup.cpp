@@ -15,23 +15,15 @@ int showTime() {
 
 int main(int argc, char *argv[]) {
 
-	printf("argc = %d \n", argc);
-	for (int i = 0; i < argc; i++) {
-		std::cout << "argv[" << i << "] = " << std::string(argv[i]) << std::endl;
-	}
-
 	showTime();
 	SYSTEMTIME st;
 	if (argc > 1) {
 		Parser::parseTime(string(argv[1]), &st);
 	} else {
-		Parser::parseTime(string("59|23|23|12|1864"), &st);
+		return -1;
 	}
 	int res = Clock::setTime(st);
 	showTime();
-
-	system("pause");
-
 	return res;
 }
 

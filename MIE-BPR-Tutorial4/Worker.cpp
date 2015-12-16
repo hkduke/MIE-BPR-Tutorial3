@@ -80,7 +80,7 @@ void Worker::run() {
 			Message m;
 			resRec = this->server->receiveData((char*)&m, sizeof(m));
 			if (resRec <= 0) break;
-			std::cout << "El server recibe esta operacion " << m.op << std::endl;
+			std::cout << "The server recieved the operation " << m.op << std::endl;
 
 			reply(&m);
 			int resSent = this->server->sendData((char*)&m, sizeof(m));
@@ -167,8 +167,5 @@ void Worker::setSystemTime(Message* m) {
 	else {
 		m->result = -1;
 	}
-
 	showTime();
-
-	
 }

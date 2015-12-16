@@ -3,6 +3,7 @@
 
 
 InputOutput::InputOutput(){
+	this->selectedFormat = 1;
 }
 
 
@@ -23,18 +24,23 @@ void InputOutput::getMessage(Message* m) {
 	
 	int op = 0;
 	while (op < Operations::GET_SYSTEM_TIME || op > Operations::EXIT) {
-		cout << "1 - " << Operations::GET_SYSTEM_TIME_STRING << endl;
-		cout << "2 - " << Operations::SET_SYSTEM_TIME_STRING << endl;
-		cout << "3 - " << Operations::EXIT_STRING << endl;
+		cout << Operations::GET_SYSTEM_TIME << " - " << Operations::GET_SYSTEM_TIME_STRING << endl;
+		cout << Operations::SET_SYSTEM_TIME << " - " << Operations::SET_SYSTEM_TIME_STRING << endl;
+		cout << Operations::SELECT_FORMAT << " - " << Operations::SELECT_FORMAT_STRING << endl;
+		cout << Operations::EXIT<<" - " << Operations::EXIT_STRING << endl;
 
 		cout << "Enter the desired operation number: ";
 		string input;
 		getline(cin, input);
-		op = InputOutput::getNumber(input);
+		op = this->getNumber(input);
 		if (op == Operations::SET_SYSTEM_TIME) {
-			InputOutput::getDatetime(m);
+			this->getDatetime(m);
 		}
 	}
+	cout << "-------------------------------------------------------" << endl;
+
+	if (op == Operations::EXIT) cout << "Good Bye!" << endl;
+
 	m->op = op;
 }
 
@@ -71,8 +77,8 @@ void InputOutput::getTime(Message* m) {
 
 		vector<string> splitedString = split(input, ':');
 		if (splitedString.size() == 2 && isInteger(splitedString[0]) && isInteger(splitedString[1])) {
-			hour = InputOutput::getNumber(splitedString[0]);
-			min = InputOutput::getNumber(splitedString[1]);
+			hour = this->getNumber(splitedString[0]);
+			min = this->getNumber(splitedString[1]);
 			if (hour > 0 && hour < 24 && min > 0 && min < 60) {
 				m->min = min;
 				m->hour = hour;
@@ -85,8 +91,8 @@ void InputOutput::getTime(Message* m) {
 }
 
 void InputOutput::getDatetime(Message* m) {
-	InputOutput::getDate(m);
-	InputOutput::getTime(m);
+	this->getDate(m);
+	this->getTime(m);
 }
 
 
@@ -108,25 +114,49 @@ int InputOutput::getNumber(string input) {
 
 void InputOutput::showMessage(Message* m) {
 	if (m->op == Operations::GET_SYSTEM_TIME) {
-		InputOutput::showDatetime(m);
+		this->showDatetime(m);
 	}
 	else if (m->op == Operations::SET_SYSTEM_TIME) {
 		if (m->result == 0) {
 			cout << "The date and time has changed correctly" << endl;
-			InputOutput::showDatetime(m);
+			this->showDatetime(m);
 		}
 		else {
 			cout << "There was a problem changing the date and the time" << endl;
 		}
 	}
-	else if (m->op == Operations::EXIT) {
-		cout << "Good Bye!" << endl;
+	else if (m->op == Operations::SELECT_FORMAT) {
+		this->selectFormat();
 	}
 
 	cout << "=======================================================" << endl;
 }
 
+void InputOutput::selectFormat() {
+	while (true) {
+		cout << "Select the desired format of the date" << endl;
+		cout << "1 - DD-MM-YYYY (31-01-2002)" << endl;
+		cout << "2 - YYYY-mmm-DD (2002 - Jan - 01)" << endl;
+		cout << "3 - YYYYMMDD (20020131)" << endl;
+		cout << "4 - YYYY-MM-DD (2002-01-31)" << endl;
+		string input;
+		getline(cin, input);
+		int op = this->getNumber(input);
+		if (op >= 1 && op <= 4) {
+			this->selectedFormat = op;
+			break;
+		}
+	}
+}
+
 void InputOutput::showDatetime(Message* m) {
+	using namespace boost::gregorian;
 	cout << "The time is " << m->hour << ":" << m->min << endl;
-	cout << "The date is " << m->day << "/" << m->month << "/" << m->year << endl;
+	stringstream ss;
+	ss << m->day << "-" << m->month << "-" << m->year;
+	date d(from_uk_string(ss.str()));
+	if (this->selectedFormat == 2) cout << "The date is " << to_simple_string(d) << endl;
+	else if (this->selectedFormat == 3) cout << "The date is " << to_iso_string(d) << endl;
+	else if (this->selectedFormat == 4) cout << "The date is " << to_iso_extended_string(d) << endl;
+	else cout << "The date is " << m->day << "/" << m->month << "/" << m->year << endl;
 }
