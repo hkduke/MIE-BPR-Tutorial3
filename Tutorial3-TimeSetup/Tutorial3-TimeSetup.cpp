@@ -27,11 +27,11 @@ int main(int argc, char *argv[]) {
 	} else {
 		Parser::parseTime(string("59|23|23|12|1864"), &st);
 	}
-	Clock::setTime(st);
+	int res = Clock::setTime(st);
 	showTime();
 
 	system("pause");
 
-    return 0;
+	return res;
 }
 

@@ -4,8 +4,10 @@ class PrivilegeManager{
 		PrivilegeManager();
 		~PrivilegeManager();
 
-		int addPrivilege(LPCWSTR privilegeName);
+		BOOL addPrivilege(LPCWSTR privilegeName);
+		BOOL removePrivilege(LPCWSTR privilegeName);
 		int removePrivileges();
+		BOOL setPrivilege(HANDLE hToken, LPCTSTR lpszPrivilege, BOOL bEnablePrivilege);
 
 	private:
 		HANDLE hToken;

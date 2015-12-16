@@ -3,30 +3,20 @@
 
 
 PrivilegeManager::PrivilegeManager(){
-	if (!OpenProcessToken(GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &hToken)) {
+	if (!OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY | TOKEN_ADJUST_PRIVILEGES, &hToken)) {
 		printf("OpenProcessToken() failed with code %d\n", GetLastError());
 	}
 }
-
 
 PrivilegeManager::~PrivilegeManager(){
 	CloseHandle(hToken);
 }
 
-BOOL SetPrivilege(
-	HANDLE hToken,          // access token handle
-	LPCTSTR lpszPrivilege,  // name of privilege to enable/disable
-	BOOL bEnablePrivilege   // to enable or disable privilege
-	)
-{
+BOOL PrivilegeManager::setPrivilege(HANDLE hToken, LPCTSTR lpszPrivilege, BOOL bEnablePrivilege ) {
 	TOKEN_PRIVILEGES tp;
 	LUID luid;
 
-	if (!LookupPrivilegeValue(
-		NULL,            // lookup privilege on local system
-		lpszPrivilege,   // privilege to lookup 
-		&luid))        // receives LUID of privilege
-	{
+	if (!LookupPrivilegeValue( NULL, lpszPrivilege, &luid)) {
 		printf("LookupPrivilegeValue error: %u\n", GetLastError());
 		return FALSE;
 	}
@@ -38,23 +28,12 @@ BOOL SetPrivilege(
 	else
 		tp.Privileges[0].Attributes = 0;
 
-	// Enable the privilege or disable all privileges.
-
-	if (!AdjustTokenPrivileges(
-		hToken,
-		FALSE,
-		&tp,
-		sizeof(TOKEN_PRIVILEGES),
-		(PTOKEN_PRIVILEGES)NULL,
-		(PDWORD)NULL))
-	{
+	if (!AdjustTokenPrivileges( hToken,	FALSE, &tp, sizeof(TOKEN_PRIVILEGES), (PTOKEN_PRIVILEGES)NULL, (PDWORD)NULL)) {
 		printf("AdjustTokenPrivileges error: %u\n", GetLastError());
 		return FALSE;
 	}
 
-	if (GetLastError() == ERROR_NOT_ALL_ASSIGNED)
-
-	{
+	if (GetLastError() == ERROR_NOT_ALL_ASSIGNED) {
 		printf("The token does not have the specified privilege. \n");
 		return FALSE;
 	}
@@ -62,37 +41,23 @@ BOOL SetPrivilege(
 	return TRUE;
 }
 
-int PrivilegeManager::addPrivilege(LPCWSTR privilegeName) {
-	SetPrivilege(this->hToken, privilegeName, true);
-	/*TOKEN_PRIVILEGES tp;
-	DWORD    dwSize = sizeof(TOKEN_PRIVILEGES);
-	LUID     luid;
-
-	if (!LookupPrivilegeValue(NULL, privilegeName, &luid)) {
-		printf("LookupPrivilege() failed with code %d\n", GetLastError());
-		return -1;
-	}
-
-	ZeroMemory(&tp, sizeof(tp));
-	tp.PrivilegeCount = 1;
-	tp.Privileges[0].Luid = luid;
-	tp.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED;
-
-	if (!AdjustTokenPrivileges(hToken, FALSE, &tp, sizeof(TOKEN_PRIVILEGES), &originalTokenPrivileges, &dwSize)) {
-		printf("AdjustTokenPrivileges() failed with code %d\n", GetLastError());
-		return -1;
-	}
-	*/
-	return 0;
+BOOL PrivilegeManager::addPrivilege(LPCWSTR privilegeName) {
+	return PrivilegeManager::setPrivilege(this->hToken, privilegeName, true);
 }
 
+BOOL PrivilegeManager::removePrivilege(LPCWSTR privilegeName) {
+	return PrivilegeManager::setPrivilege(this->hToken, privilegeName , false);
+}
+
+
 int PrivilegeManager::removePrivileges() {
-	/*DWORD    dwSize = sizeof(TOKEN_PRIVILEGES);
-	AdjustTokenPrivileges(hToken, FALSE, &originalTokenPrivileges, dwSize, NULL, NULL);
-	if (GetLastError() != ERROR_SUCCESS) {
+	TOKEN_PRIVILEGES originalTokenPrivileges;
+	DWORD    dwSize = sizeof(TOKEN_PRIVILEGES);
+
+	int res = AdjustTokenPrivileges(hToken, TRUE, NULL, NULL, NULL, NULL);
+
+	if (! res) {
 		printf("AdjustTokenPrivileges() failed with code %d\n", GetLastError());
 		return -1;
-	}*/
-	SetPrivilege(this->hToken, SE_SYSTEMTIME_NAME, false);
-	return 0;
+	}
 }
