@@ -108,14 +108,15 @@ int InputOutput::getNumber(string input) {
 
 void InputOutput::showMessage(Message* m) {
 	if (m->op == Operations::GET_SYSTEM_TIME) {
-		cout << "aca hay que mostrar la hora" << endl;
 		InputOutput::showDatetime(m);
 	}
 	else if (m->op == Operations::SET_SYSTEM_TIME) {
-		cout << "aca hay que decir si salio todo bien" << endl;
-		if (m->result == 1) {
+		if (m->result == 0) {
 			cout << "The date and time has changed correctly" << endl;
 			InputOutput::showDatetime(m);
+		}
+		else {
+			cout << "There was a problem changing the date and the time" << endl;
 		}
 	}
 	else if (m->op == Operations::EXIT) {

@@ -9,7 +9,7 @@ ClientProgram::ClientProgram(){
 
 ClientProgram::~ClientProgram(){
 	if (this->client->close() == -1) {
-		std:cout << "Error closing the client" << std::endl;
+		std::cout << "Error closing the client" << std::endl;
 	}
 	delete this->client;
 }
