@@ -21,6 +21,7 @@
 
 #include "../Tutorial3-Shared/Message.h"
 #include "../Tutorial3-Shared/Operations.h"
+#include "../Tutorial3-TimeSetup/PrivilegeManager.h"
 
 #include "Server.h"
 #include "Worker.h"

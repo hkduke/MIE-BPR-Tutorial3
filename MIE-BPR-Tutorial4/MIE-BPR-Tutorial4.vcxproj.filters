@@ -33,6 +33,9 @@
     <ClInclude Include="Worker.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\Tutorial3-TimeSetup\PrivilegeManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -45,6 +48,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Worker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Tutorial3-TimeSetup\PrivilegeManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

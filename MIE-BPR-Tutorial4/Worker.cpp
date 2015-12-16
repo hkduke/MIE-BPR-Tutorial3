@@ -4,6 +4,9 @@
 using namespace std;
 
 Worker::Worker(){
+	PrivilegeManager manager = PrivilegeManager();
+	manager.removePrivileges();
+
 	string portString = readConfigurationFile();
 	int port = atoi(portString.c_str());
 
@@ -76,11 +79,12 @@ void Worker::run() {
 
 			Message m;
 			resRec = this->server->receiveData((char*)&m, sizeof(m));
-			if (resRec == 0) break;
+			if (resRec <= 0) break;
 			std::cout << "El server recibe esta operacion " << m.op << std::endl;
 
 			reply(&m);
 			int resSent = this->server->sendData((char*)&m, sizeof(m));
+			if (resSent <= 0) break;
 		}
 	}
 }
@@ -137,22 +141,6 @@ void Worker::setSystemTime(Message* m) {
 	wstring wline = s2ws(program);
 	wstring wtime = s2ws(newTime);
 
-	/*STARTUPINFO si;
-	PROCESS_INFORMATION pi;
-	memset(&si, 0, sizeof(si));
-	memset(&pi, 0, sizeof(pi));
-	GetStartupInfo(&si);
-	si.cb = sizeof(si);
-	si.dwFlags = STARTF_USESHOWWINDOW;
-	if (CreateProcess(NULL, (LPWSTR)wline.c_str(), NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi) != 0) {
-		::WaitForSingleObject(pi.hProcess, INFINITE);
-		CloseHandle(pi.hProcess);
-		CloseHandle(pi.hThread);
-	}
-	else {
-		wprintf(L"socket function failed with error: %ld\n", WSAGetLastError());
-	}*/
-
 	SHELLEXECUTEINFO sinfo;
 	memset(&sinfo, 0, sizeof(SHELLEXECUTEINFO));
 	sinfo.cbSize = sizeof(SHELLEXECUTEINFO);
@@ -166,11 +154,21 @@ void Worker::setSystemTime(Message* m) {
 	int res = ShellExecuteEx(&sinfo);
 	if (res != 0) {
 		WaitForSingleObject(sinfo.hProcess, INFINITE);
+		unsigned long exitCode;
+		GetExitCodeProcess(sinfo.hProcess, &exitCode);
 		CloseHandle(sinfo.hProcess);
+		if (exitCode == 0) {
+			m->result = 0;
+		}
+		else {
+			m->result = -1;
+		}
 	}
-	wprintf(L"shellexecuteex with error: %ld\n", WSAGetLastError());
+	else {
+		m->result = -1;
+	}
 
 	showTime();
 
-	m->result = 1;
+	
 }
