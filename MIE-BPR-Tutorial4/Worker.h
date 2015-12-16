@@ -10,6 +10,7 @@ class Worker{
 	private:
 		Server* server;
 		std::string readConfigurationFile();
+		int createConfigurationFile(const wchar_t* path);
 		std::string serializeTime(Message* m);
 
 		void reply(Message* m);

@@ -27,6 +27,7 @@ string Worker::readConfigurationFile() {
 	SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, NULL, &localAppData);
 	wstringstream ss;
 	ss << localAppData << L"\\Clock\\conf.txt";
+	this->createConfigurationFile(localAppData);
 
 	ifstream file;
 
@@ -42,9 +43,29 @@ string Worker::readConfigurationFile() {
 		CoTaskMemFree(static_cast<void*>(localAppData));
 		return string(output);
 	}
-	printf("The file conf.txt in the folder AppData/Clock does not exists");
+	printf("The file conf.txt in the folder AppData/Clock does not exists, creating it...");
+
+	this->createConfigurationFile(localAppData);
+
 	return string("80");
 
+}
+
+int Worker::createConfigurationFile(const wchar_t* path) {
+	wstringstream ss;
+	ss << path << L"\\Clock";
+	BOOL res = CreateDirectory(ss.str().c_str(), NULL);
+
+	ss << "\\conf.txt";
+	HANDLE h = CreateFile(ss.str().c_str(), GENERIC_WRITE, 0, NULL, CREATE_NEW, FILE_ATTRIBUTE_NORMAL, NULL);
+	
+	string value = "80";
+	DWORD dwBytesWritten = 0;
+	WriteFile(h, value.c_str(), value.size(), &dwBytesWritten, NULL);
+
+	CloseHandle(h);
+
+	return 0;
 }
 
 void Worker::run() {
